@@ -1,11 +1,17 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Card } from "@/components/ui/card";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">주식등록</h2>
+          {/* Stock registration form will be added here */}
+        </Card>
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">주식현황</h2>
+          {/* Stock list will be added here */}
+        </Card>
       </div>
     </div>
   );
