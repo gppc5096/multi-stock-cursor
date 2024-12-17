@@ -11,6 +11,7 @@ export const calculatePercentage = (amount: number, total: number) => {
 export type CountryStats = {
   krwAmount: number;
   usdAmount: number;
+  quantity: number;
 };
 
 export type BrokerStockStats = {
@@ -39,8 +40,11 @@ export const calculateCountryStats = (stocks: StockTransaction[]) => {
       acc[country] = {
         krwAmount: 0,
         usdAmount: 0,
+        quantity: 0,
       };
     }
+    
+    acc[country].quantity += stock.quantity;
     
     if (country === 'KRW') {
       acc[country].krwAmount += stock.krwAmount;

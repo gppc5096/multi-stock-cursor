@@ -7,6 +7,7 @@ const TickerStatistics = () => {
   const stocks = loadStocks();
   const tickerStats = calculateTickerStats(stocks);
   const totalAssets = Object.values(tickerStats).reduce((sum, { krwAmount }) => sum + krwAmount, 0);
+  const totalQuantity = Object.values(tickerStats).reduce((sum, { quantity }) => sum + quantity, 0);
 
   return (
     <Card className="p-4">
@@ -27,7 +28,7 @@ const TickerStatistics = () => {
             <TableRow key={ticker}>
               <TableCell>{ticker}</TableCell>
               <TableCell>{stats.stockName}</TableCell>
-              <TableCell className="text-right">{formatNumber(stats.quantity)}</TableCell>
+              <TableCell className="text-right">{formatNumber(stats.quantity)} 주</TableCell>
               <TableCell className="text-right">
                 {stats.usdAmount > 0 ? `$${formatNumber(stats.usdAmount)}` : '-'}
               </TableCell>
@@ -36,7 +37,8 @@ const TickerStatistics = () => {
             </TableRow>
           ))}
           <TableRow className="font-semibold">
-            <TableCell colSpan={3}>총 합계</TableCell>
+            <TableCell colSpan={2}>총 합계</TableCell>
+            <TableCell className="text-right">{formatNumber(totalQuantity)} 주</TableCell>
             <TableCell className="text-right">-</TableCell>
             <TableCell className="text-right">₩{formatNumber(totalAssets)}</TableCell>
             <TableCell className="text-right">100%</TableCell>

@@ -7,6 +7,9 @@ const BrokerStatistics = () => {
   const stocks = loadStocks();
   const brokerStats = calculateBrokerStats(stocks);
   const totalAssets = Object.values(brokerStats).reduce((sum, { totalKRW }) => sum + totalKRW, 0);
+  const totalQuantity = Object.values(brokerStats).reduce((sum, data) => {
+    return sum + Object.values(data.stocks).reduce((stockSum, { quantity }) => stockSum + quantity, 0);
+  }, 0);
 
   return (
     <Card className="p-4">
@@ -33,7 +36,7 @@ const BrokerStatistics = () => {
                     </TableCell>
                   ) : null}
                   <TableCell>{ticker}</TableCell>
-                  <TableCell className="text-right">{formatNumber(stats.quantity)}</TableCell>
+                  <TableCell className="text-right">{formatNumber(stats.quantity)} 주</TableCell>
                   <TableCell className="text-right">
                     {stats.usdAmount > 0 ? `$${formatNumber(stats.usdAmount)}` : '-'}
                   </TableCell>
@@ -45,7 +48,9 @@ const BrokerStatistics = () => {
                 <TableCell colSpan={2} className="font-semibold">
                   {broker} 합계
                 </TableCell>
-                <TableCell className="text-right">-</TableCell>
+                <TableCell className="text-right font-semibold">
+                  {formatNumber(Object.values(data.stocks).reduce((sum, { quantity }) => sum + quantity, 0))} 주
+                </TableCell>
                 <TableCell className="text-right font-semibold">
                   {data.totalUSD > 0 ? `$${formatNumber(data.totalUSD)}` : '-'}
                 </TableCell>
@@ -59,7 +64,8 @@ const BrokerStatistics = () => {
             </>
           ))}
           <TableRow className="font-semibold">
-            <TableCell colSpan={3}>총 합계</TableCell>
+            <TableCell colSpan={2}>총 합계</TableCell>
+            <TableCell className="text-right">{formatNumber(totalQuantity)} 주</TableCell>
             <TableCell className="text-right">-</TableCell>
             <TableCell className="text-right">₩{formatNumber(totalAssets)}</TableCell>
             <TableCell className="text-right">100%</TableCell>
