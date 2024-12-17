@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface NumberInputProps {
   label: string;
@@ -32,6 +33,9 @@ const NumberInput = ({ label, value, onChange, placeholder = "0", readOnly = fal
         onChange={(e) => handleNumberInput(e.target.value.replace(/,/g, ''))}
         placeholder={placeholder}
         readOnly={readOnly}
+        className={cn(
+          readOnly && "bg-custom-gray border-custom-orange cursor-not-allowed"
+        )}
       />
     </div>
   );

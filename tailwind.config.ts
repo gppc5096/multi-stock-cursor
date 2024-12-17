@@ -63,7 +63,8 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				'custom-green': '#23ad0a',
-				'custom-orange': '#f26518'
+				'custom-orange': '#f26518',
+				'custom-gray': '#dbd8d7'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
