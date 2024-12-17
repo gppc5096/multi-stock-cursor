@@ -1,10 +1,29 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StockTransaction } from "@/types/stock";
+import { loadStocks } from "@/lib/stockStorage";
 
 const StockList = () => {
-  // 임시 데이터 (나중에 실제 데이터로 교체)
-  const stocks: StockTransaction[] = [];
+  const [stocks, setStocks] = useState<StockTransaction[]>([]);
+
+  const loadStockData = () => {
+    const stockData = loadStocks();
+    setStocks(stockData);
+  };
+
+  useEffect(() => {
+    loadStockData();
+    
+    // 새로운 주식이 등록될 때마다 목록 갱신
+    window.addEventListener('stocksChanged', loadStockData);
+    return () => window.removeEventListener('stocksChanged', loadStockData);
+  }, []);
+
+  // 숫자 포맷팅 함수
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat().format(value);
+  };
 
   return (
     <Card className="p-4">
@@ -14,9 +33,9 @@ const StockList = () => {
             <TableHead>거래일자</TableHead>
             <TableHead>구분</TableHead>
             <TableHead>종목명</TableHead>
-            <TableHead>수량</TableHead>
-            <TableHead>단가</TableHead>
-            <TableHead>매수금액</TableHead>
+            <TableHead className="text-right">수량</TableHead>
+            <TableHead className="text-right">단가</TableHead>
+            <TableHead className="text-right">매수금액</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -32,12 +51,12 @@ const StockList = () => {
                 <TableCell>{stock.date}</TableCell>
                 <TableCell>{stock.type === 'buy' ? '매수' : '매도'}</TableCell>
                 <TableCell>{stock.stockName}</TableCell>
-                <TableCell>{stock.quantity}</TableCell>
-                <TableCell>{stock.price}</TableCell>
-                <TableCell>
+                <TableCell className="text-right">{formatNumber(stock.quantity)}</TableCell>
+                <TableCell className="text-right">{formatNumber(stock.price)}</TableCell>
+                <TableCell className="text-right">
                   {stock.country === 'USD' 
-                    ? `$${stock.usdAmount}`
-                    : `₩${stock.krwAmount}`
+                    ? `$${formatNumber(stock.usdAmount)}`
+                    : `₩${formatNumber(stock.krwAmount)}`
                   }
                 </TableCell>
               </TableRow>
