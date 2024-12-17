@@ -7,8 +7,8 @@ const Navbar = () => {
   const isActive = (path: string) => location.pathname === path;
   
   return (
-    <nav className="border-b">
-      <div className="max-w-7xl mx-auto px-4">
+    <nav className="border-b sticky top-0 bg-background z-50">
+      <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
             <h1 className="text-xl font-bold">Multi Stock Management</h1>
