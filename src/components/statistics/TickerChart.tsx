@@ -1,43 +1,19 @@
 import { loadStocks } from "@/lib/stockStorage";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { calculateTickerStats, formatNumber } from "@/lib/statisticsUtils";
 
 const TickerChart = () => {
   const stocks = loadStocks();
+  const tickerStats = calculateTickerStats(stocks);
   
-  // 티커별 자산 통계 계산
-  const tickerStats = stocks.reduce((acc, stock) => {
-    const ticker = stock.ticker;
-    if (!acc[ticker]) {
-      acc[ticker] = {
-        name: stock.stockName,
-        krw: 0,
-        usd: 0,
-        quantity: 0,
-      };
-    }
-    
-    acc[ticker].krw += stock.krwAmount;
-    if (stock.country === 'USD') {
-      acc[ticker].usd += stock.usdAmount;
-    }
-    acc[ticker].quantity += stock.quantity;
-    
-    return acc;
-  }, {} as Record<string, { name: string; krw: number; usd: number; quantity: number; }>);
-
-  // 차트 데이터 생성
   const chartData = Object.entries(tickerStats).map(([ticker, stats]) => ({
     ticker,
-    name: stats.name,
-    value: stats.krw,
+    name: stats.stockName,
+    value: stats.krwAmount,
     quantity: stats.quantity,
-    usdValue: stats.usd,
+    usdValue: stats.usdAmount,
   }));
-
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat().format(value);
-  };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {

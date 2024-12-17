@@ -1,40 +1,19 @@
 import { loadStocks } from "@/lib/stockStorage";
 import { Card } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { calculateBrokerStats, formatNumber } from "@/lib/statisticsUtils";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 const BrokerChart = () => {
   const stocks = loadStocks();
+  const brokerStats = calculateBrokerStats(stocks);
   
-  // 증권사별 자산 통계 계산
-  const brokerStats = stocks.reduce((acc, stock) => {
-    const broker = stock.broker;
-    if (!acc[broker]) {
-      acc[broker] = {
-        krw: 0,
-        usd: 0,
-      };
-    }
-    
-    acc[broker].krw += stock.krwAmount;
-    if (stock.country === 'USD') {
-      acc[broker].usd += stock.usdAmount;
-    }
-    
-    return acc;
-  }, {} as Record<string, { krw: number; usd: number; }>);
-
-  // 차트 데이터 생성
-  const chartData = Object.entries(brokerStats).map(([name, { krw, usd }]) => ({
+  const chartData = Object.entries(brokerStats).map(([name, { totalKRW, totalUSD }]) => ({
     name,
-    value: krw,
-    usdValue: usd,
+    value: totalKRW,
+    usdValue: totalUSD,
   }));
-
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat().format(value);
-  };
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {

@@ -1,62 +1,12 @@
 import { loadStocks } from "@/lib/stockStorage";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { calculateBrokerStats, formatNumber, calculatePercentage } from "@/lib/statisticsUtils";
 
 const BrokerStatistics = () => {
   const stocks = loadStocks();
-  
-  // 증권사별 자산 통계 계산
-  const brokerStats = stocks.reduce((acc, stock) => {
-    const broker = stock.broker;
-    if (!acc[broker]) {
-      acc[broker] = {
-        stocks: {},
-        totalKRW: 0,
-        totalUSD: 0,
-      };
-    }
-    
-    // 티커별 통계
-    if (!acc[broker].stocks[stock.ticker]) {
-      acc[broker].stocks[stock.ticker] = {
-        quantity: 0,
-        krwAmount: 0,
-        usdAmount: 0,
-      };
-    }
-    
-    acc[broker].stocks[stock.ticker].quantity += stock.quantity;
-    acc[broker].stocks[stock.ticker].krwAmount += stock.krwAmount;
-    if (stock.country === 'USD') {
-      acc[broker].stocks[stock.ticker].usdAmount += stock.usdAmount;
-    }
-    
-    // 증권사 총합
-    acc[broker].totalKRW += stock.krwAmount;
-    if (stock.country === 'USD') {
-      acc[broker].totalUSD += stock.usdAmount;
-    }
-    
-    return acc;
-  }, {} as Record<string, {
-    stocks: Record<string, {
-      quantity: number;
-      krwAmount: number;
-      usdAmount: number;
-    }>;
-    totalKRW: number;
-    totalUSD: number;
-  }>);
-
+  const brokerStats = calculateBrokerStats(stocks);
   const totalAssets = Object.values(brokerStats).reduce((sum, { totalKRW }) => sum + totalKRW, 0);
-
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat().format(value);
-  };
-
-  const calculatePercentage = (amount: number) => {
-    return ((amount / totalAssets) * 100).toFixed(2);
-  };
 
   return (
     <Card className="p-4">
@@ -88,7 +38,7 @@ const BrokerStatistics = () => {
                     {stats.usdAmount > 0 ? `$${formatNumber(stats.usdAmount)}` : '-'}
                   </TableCell>
                   <TableCell className="text-right">₩{formatNumber(stats.krwAmount)}</TableCell>
-                  <TableCell className="text-right">{calculatePercentage(stats.krwAmount)}%</TableCell>
+                  <TableCell className="text-right">{calculatePercentage(stats.krwAmount, totalAssets)}%</TableCell>
                 </TableRow>
               ))}
               <TableRow className="bg-muted/50">
@@ -103,7 +53,7 @@ const BrokerStatistics = () => {
                   ₩{formatNumber(data.totalKRW)}
                 </TableCell>
                 <TableCell className="text-right font-semibold">
-                  {calculatePercentage(data.totalKRW)}%
+                  {calculatePercentage(data.totalKRW, totalAssets)}%
                 </TableCell>
               </TableRow>
             </>
