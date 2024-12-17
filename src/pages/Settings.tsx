@@ -1,11 +1,36 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SettingsForm from "@/components/settings/SettingsForm";
+import SettingsTable from "@/components/settings/SettingsTable";
+import DataManagement from "@/components/settings/DataManagement";
+import { Separator } from "@/components/ui/separator";
 
 const Settings = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-4">설정</h2>
-        {/* Settings form and lists will be added here */}
+      <Card>
+        <CardHeader>
+          <CardTitle>설정</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <h3 className="text-lg font-medium mb-4">신규 항목 등록</h3>
+            <SettingsForm />
+          </div>
+          
+          <Separator className="my-6" />
+          
+          <div>
+            <h3 className="text-lg font-medium mb-4">항목 관리</h3>
+            <SettingsTable />
+          </div>
+          
+          <Separator className="my-6" />
+          
+          <div>
+            <h3 className="text-lg font-medium mb-4">데이터 관리</h3>
+            <DataManagement />
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
