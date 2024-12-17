@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { loadSettings, saveSettings } from "@/lib/storage";
 import { loadStocks } from "@/lib/stockStorage";
 import * as XLSX from 'xlsx';
+import { StockTransaction } from "@/types/stock";
 
 const DataManagement = () => {
   const { toast } = useToast();
@@ -19,14 +20,26 @@ const DataManagement = () => {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
       
-      // 여기에서 데이터를 저장하는 로직 추가 예정
-      console.log("Imported stock data:", jsonData);
+      // id가 없는 데이터에 대해 새로운 id 생성
+      const processedData = jsonData.map((item: any) => ({
+        ...item,
+        id: item.id || crypto.randomUUID(),
+        // 숫자 데이터 타입 보장
+        quantity: Number(item.quantity) || 0,
+        exchangeRate: Number(item.exchangeRate) || 0,
+        price: Number(item.price) || 0,
+        usdAmount: Number(item.usdAmount) || 0,
+        krwAmount: Number(item.krwAmount) || 0,
+      })) as StockTransaction[];
+      
+      console.log("Processed stock data:", processedData);
       
       toast({
         title: "가져오기 성공",
         description: "주식 데이터를 성공적으로 가져왔습니다.",
       });
     } catch (error) {
+      console.error("Import error:", error);
       toast({
         title: "가져오기 실패",
         description: "파일을 처리하는 중 오류가 발생했습니다.",
