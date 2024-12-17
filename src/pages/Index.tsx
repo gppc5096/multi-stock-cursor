@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import StockRegistrationForm from "@/components/stock/StockRegistrationForm";
 
 const Index = () => {
   return (
@@ -6,7 +7,7 @@ const Index = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
           <h2 className="text-2xl font-bold mb-4">주식등록</h2>
-          {/* Stock registration form will be added here */}
+          <StockRegistrationForm />
         </Card>
         <Card className="p-6">
           <h2 className="text-2xl font-bold mb-4">주식현황</h2>
