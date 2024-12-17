@@ -36,7 +36,7 @@ const TickerStatistics = () => {
               <TableCell className="text-right">{calculatePercentage(stats.krwAmount, totalAssets)}%</TableCell>
             </TableRow>
           ))}
-          <TableRow className="font-semibold">
+          <TableRow className="bg-[#F1F0FB] font-semibold text-[#333333]">
             <TableCell colSpan={2}>총 합계</TableCell>
             <TableCell className="text-right">{formatNumber(totalQuantity)} 주</TableCell>
             <TableCell className="text-right">-</TableCell>

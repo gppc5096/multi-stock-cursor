@@ -34,7 +34,7 @@ const CountryStatistics = () => {
               <TableCell className="text-right">{calculatePercentage(krwAmount, totalKRW)}%</TableCell>
             </TableRow>
           ))}
-          <TableRow className="font-semibold">
+          <TableRow className="bg-[#F1F0FB] font-semibold text-[#333333]">
             <TableCell>총 합계</TableCell>
             <TableCell className="text-right">{formatNumber(totalQuantity)} 주</TableCell>
             <TableCell className="text-right">-</TableCell>
