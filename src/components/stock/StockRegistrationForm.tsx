@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { loadSettings } from "@/lib/storage";
 import { Settings } from "@/types/settings";
 import { format } from "date-fns";
+import NumberInput from "./NumberInput";
 
 const StockRegistrationForm = () => {
   const [settings, setSettings] = useState<Settings>(loadSettings());
@@ -33,21 +34,14 @@ const StockRegistrationForm = () => {
     return () => window.removeEventListener('settingsChanged', handleSettingsChange);
   }, []);
 
-  // 숫자 입력 처리 함수
-  const handleNumberInput = (value: string, field: string) => {
-    // 숫자와 소수점만 허용
-    const cleanValue = value.replace(/[^\d.]/g, '');
+  // 종목 선택 시 티커 자동 설정
+  const handleStockSelect = (stockName: string) => {
+    const stock = settings.stocks.find(s => s.name === stockName);
     setFormData(prev => ({
       ...prev,
-      [field]: cleanValue
+      stockName,
+      ticker: stock?.ticker || ""
     }));
-  };
-
-  // 천단위 구분 기호 포맷팅
-  const formatNumber = (value: string) => {
-    if (!value) return "";
-    const number = parseFloat(value);
-    return new Intl.NumberFormat().format(number);
   };
 
   // 금액 계산
@@ -77,16 +71,6 @@ const StockRegistrationForm = () => {
         krwAmount
       }));
     }
-  };
-
-  // 종목 선택 시 티커 자동 설정
-  const handleStockSelect = (stockName: string) => {
-    const stock = settings.stocks.find(s => s.name === stockName);
-    setFormData(prev => ({
-      ...prev,
-      stockName,
-      ticker: stock?.ticker || ""
-    }));
   };
 
   // 입력값 변경 시 금액 재계산
@@ -177,48 +161,35 @@ const StockRegistrationForm = () => {
           <Input value={formData.ticker} readOnly />
         </div>
 
-        <div>
-          <Label>매수수량</Label>
-          <Input
-            value={formData.quantity}
-            onChange={(e) => handleNumberInput(e.target.value, 'quantity')}
-            placeholder="0"
-          />
-          <div className="text-sm text-right text-gray-500 mt-1">
-            {formatNumber(formData.quantity)}
-          </div>
-        </div>
+        <NumberInput
+          label="매수수량"
+          value={formData.quantity}
+          onChange={(value) => setFormData(prev => ({ ...prev, quantity: value }))}
+        />
 
-        <div>
-          <Label>매수환율</Label>
-          <Input
-            value={formData.exchangeRate}
-            onChange={(e) => handleNumberInput(e.target.value, 'exchangeRate')}
-            placeholder="0"
-          />
-          <div className="text-sm text-right text-gray-500 mt-1">
-            {formatNumber(formData.exchangeRate)}
-          </div>
-        </div>
+        <NumberInput
+          label="매수환율"
+          value={formData.exchangeRate}
+          onChange={(value) => setFormData(prev => ({ ...prev, exchangeRate: value }))}
+        />
 
-        <div>
-          <Label>매수단가</Label>
-          <Input
-            value={formData.price}
-            onChange={(e) => handleNumberInput(e.target.value, 'price')}
-            placeholder="0"
-          />
-        </div>
+        <NumberInput
+          label="매수단가"
+          value={formData.price}
+          onChange={(value) => setFormData(prev => ({ ...prev, price: value }))}
+        />
 
-        <div>
-          <Label>달러매수금</Label>
-          <Input value={formatNumber(formData.usdAmount)} readOnly />
-        </div>
+        <NumberInput
+          label="달러매수금"
+          value={formData.usdAmount}
+          readOnly
+        />
 
-        <div>
-          <Label>원화매수금</Label>
-          <Input value={formatNumber(formData.krwAmount)} readOnly />
-        </div>
+        <NumberInput
+          label="원화매수금"
+          value={formData.krwAmount}
+          readOnly
+        />
       </div>
 
       <Button type="submit" className="w-full">
