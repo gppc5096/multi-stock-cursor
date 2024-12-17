@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import StockRegistrationForm from "@/components/stock/StockRegistrationForm";
+import StockList from "@/components/stock/StockList";
 
 const Index = () => {
   return (
@@ -11,7 +12,7 @@ const Index = () => {
         </Card>
         <Card className="p-6">
           <h2 className="text-2xl font-bold mb-4">주식현황</h2>
-          {/* Stock list will be added here */}
+          <StockList />
         </Card>
       </div>
     </div>
