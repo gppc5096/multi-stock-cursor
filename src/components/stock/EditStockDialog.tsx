@@ -31,7 +31,7 @@ interface EditStockDialogProps {
 const EditStockDialog = ({ stock, open, onOpenChange, onSuccess }: EditStockDialogProps) => {
   const [date, setDate] = useState("");
   const [type, setType] = useState<"buy" | "sell">("buy");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState<"KRW" | "USD">("KRW");
   const [broker, setBroker] = useState("");
   const [stockName, setStockName] = useState("");
   const [ticker, setTicker] = useState("");
@@ -120,13 +120,13 @@ const EditStockDialog = ({ stock, open, onOpenChange, onSuccess }: EditStockDial
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right">국가</Label>
-            <Select value={country} onValueChange={setCountry}>
+            <Select value={country} onValueChange={(value: "KRW" | "USD") => setCountry(value)}>
               <SelectTrigger className="col-span-3">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {settings.countries.map((c) => (
-                  <SelectItem key={c.id} value={c.name}>
+                  <SelectItem key={c.id} value={c.name as "KRW" | "USD"}>
                     {c.name}
                   </SelectItem>
                 ))}
