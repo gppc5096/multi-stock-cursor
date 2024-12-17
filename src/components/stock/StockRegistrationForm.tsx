@@ -182,17 +182,19 @@ const StockRegistrationForm = () => {
         <NumberInput
           label="달러매수금"
           value={formData.usdAmount}
+          onChange={() => {}}
           readOnly
         />
 
         <NumberInput
           label="원화매수금"
           value={formData.krwAmount}
+          onChange={() => {}}
           readOnly
         />
       </div>
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full bg-custom-green hover:bg-custom-green/90 text-xl">
         등록하기
       </Button>
     </form>
