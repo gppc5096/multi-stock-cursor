@@ -15,55 +15,62 @@ const StockList = () => {
   useEffect(() => {
     loadStockData();
     
-    // 새로운 주식이 등록될 때마다 목록 갱신
     window.addEventListener('stocksChanged', loadStockData);
     return () => window.removeEventListener('stocksChanged', loadStockData);
   }, []);
 
-  // 숫자 포맷팅 함수
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat().format(value);
   };
 
   return (
-    <Card className="p-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>거래일자</TableHead>
-            <TableHead>구분</TableHead>
-            <TableHead>종목명</TableHead>
-            <TableHead className="text-right">수량</TableHead>
-            <TableHead className="text-right">단가</TableHead>
-            <TableHead className="text-right">매수금액</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {stocks.length === 0 ? (
+    <Card className="w-full overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={6} className="text-center h-24">
-                등록된 주식이 없습니다
-              </TableCell>
+              <TableHead className="min-w-[100px]">거래일자</TableHead>
+              <TableHead className="min-w-[80px]">구분</TableHead>
+              <TableHead className="min-w-[100px]">국가</TableHead>
+              <TableHead className="min-w-[120px]">증권사</TableHead>
+              <TableHead className="min-w-[150px]">종목명</TableHead>
+              <TableHead className="min-w-[100px]">티커</TableHead>
+              <TableHead className="min-w-[100px] text-right">수량</TableHead>
+              <TableHead className="min-w-[100px] text-right">환율</TableHead>
+              <TableHead className="min-w-[100px] text-right">단가</TableHead>
+              <TableHead className="min-w-[120px] text-right">달러매수금</TableHead>
+              <TableHead className="min-w-[120px] text-right">원화매수금</TableHead>
             </TableRow>
-          ) : (
-            stocks.map((stock) => (
-              <TableRow key={stock.id}>
-                <TableCell>{stock.date}</TableCell>
-                <TableCell>{stock.type === 'buy' ? '매수' : '매도'}</TableCell>
-                <TableCell>{stock.stockName}</TableCell>
-                <TableCell className="text-right">{formatNumber(stock.quantity)}</TableCell>
-                <TableCell className="text-right">{formatNumber(stock.price)}</TableCell>
-                <TableCell className="text-right">
-                  {stock.country === 'USD' 
-                    ? `$${formatNumber(stock.usdAmount)}`
-                    : `₩${formatNumber(stock.krwAmount)}`
-                  }
+          </TableHeader>
+          <TableBody>
+            {stocks.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={11} className="text-center h-24">
+                  등록된 주식이 없습니다
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : (
+              stocks.map((stock) => (
+                <TableRow key={stock.id}>
+                  <TableCell>{stock.date}</TableCell>
+                  <TableCell>{stock.type === 'buy' ? '매수' : '매도'}</TableCell>
+                  <TableCell>{stock.country}</TableCell>
+                  <TableCell>{stock.broker}</TableCell>
+                  <TableCell>{stock.stockName}</TableCell>
+                  <TableCell>{stock.ticker}</TableCell>
+                  <TableCell className="text-right">{formatNumber(stock.quantity)}</TableCell>
+                  <TableCell className="text-right">{formatNumber(stock.exchangeRate)}</TableCell>
+                  <TableCell className="text-right">{formatNumber(stock.price)}</TableCell>
+                  <TableCell className="text-right">
+                    {stock.country === 'USD' && `$${formatNumber(stock.usdAmount)}`}
+                  </TableCell>
+                  <TableCell className="text-right">₩{formatNumber(stock.krwAmount)}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </Card>
   );
 };
