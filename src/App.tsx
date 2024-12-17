@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { StrictMode } from "react";
 import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 import Index from "./pages/Index";
 import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
@@ -28,11 +29,14 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Navbar />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/statistics" element={<Statistics />} />
-                <Route path="/settings" element={<Settings />} />
-              </Routes>
+              <div className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/statistics" element={<Statistics />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Routes>
+              </div>
+              <Footer />
             </BrowserRouter>
           </div>
         </TooltipProvider>
