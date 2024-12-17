@@ -17,8 +17,13 @@ const SettingsForm = () => {
   // 입력값을 변환하는 함수
   const transformInput = (value: string) => {
     // 한글, 영문, 숫자만 허용하고 영문은 대문자로 변환
+    const koreanPattern = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    const alphaNumericPattern = /[a-zA-Z0-9\s]/;
+    
     return value
-      .replace(/[^가-힣a-zA-Z0-9\s]/g, '')
+      .split('')
+      .filter(char => koreanPattern.test(char) || alphaNumericPattern.test(char))
+      .join('')
       .toUpperCase();
   };
 
