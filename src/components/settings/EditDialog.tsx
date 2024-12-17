@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,9 +21,17 @@ interface EditDialogProps {
 }
 
 const EditDialog = ({ item, open, onOpenChange, onSuccess }: EditDialogProps) => {
-  const [name, setName] = useState(item?.name || "");
-  const [ticker, setTicker] = useState(item?.ticker || "");
+  const [name, setName] = useState("");
+  const [ticker, setTicker] = useState("");
   const { toast } = useToast();
+
+  // 다이얼로그가 열릴 때마다 현재 항목의 데이터로 상태 초기화
+  useEffect(() => {
+    if (item && open) {
+      setName(item.name);
+      setTicker(item.ticker || "");
+    }
+  }, [item, open]);
 
   // 입력값을 변환하는 함수
   const transformInput = (value: string) => {
@@ -40,19 +48,11 @@ const EditDialog = ({ item, open, onOpenChange, onSuccess }: EditDialogProps) =>
   const handleSave = () => {
     if (!item) return;
 
-    if (!name) {
+    // 둘 다 비어있는 경우에만 저장하지 않음
+    if (!name && !ticker) {
       toast({
         title: "오류",
-        description: "이름을 입력해주세요.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (item.type === "stock" && !ticker) {
-      toast({
-        title: "오류",
-        description: "티커를 입력해주세요.",
+        description: "최소한 하나의 필드는 입력해야 합니다.",
         variant: "destructive"
       });
       return;
@@ -65,10 +65,11 @@ const EditDialog = ({ item, open, onOpenChange, onSuccess }: EditDialogProps) =>
 
     const index = list.findIndex(i => i.id === item.id);
     if (index !== -1) {
+      // 수정된 값만 업데이트
       list[index] = {
         ...item,
-        name,
-        ...(item.type === "stock" && { ticker })
+        name: name || item.name, // 이름이 비어있으면 기존 값 유지
+        ...(item.type === "stock" && { ticker: ticker || item.ticker }) // 티커가 비어있으면 기존 값 유지
       };
 
       saveSettings(settings);
