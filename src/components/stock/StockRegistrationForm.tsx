@@ -7,9 +7,12 @@ import { loadSettings } from "@/lib/storage";
 import { Settings } from "@/types/settings";
 import { format } from "date-fns";
 import NumberInput from "./NumberInput";
+import { saveStock } from "@/lib/stockStorage";
+import { useToast } from "@/components/ui/use-toast";
 
 const StockRegistrationForm = () => {
   const [settings, setSettings] = useState<Settings>(loadSettings());
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     date: format(new Date(), "yyyy-MM-dd"),
     type: "",
@@ -83,8 +86,60 @@ const StockRegistrationForm = () => {
     );
   }, [formData.quantity, formData.price, formData.exchangeRate, formData.country]);
 
+  // 폼 제출 처리
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // 필수 필드 검증
+    if (!formData.type || !formData.country || !formData.broker || !formData.stockName) {
+      toast({
+        variant: "destructive",
+        title: "입력 오류",
+        description: "모든 필수 항목을 입력해주세요.",
+      });
+      return;
+    }
+
+    // 데이터 저장
+    saveStock({
+      id: crypto.randomUUID(),
+      date: formData.date,
+      type: formData.type as 'buy' | 'sell',
+      country: formData.country as 'KRW' | 'USD',
+      broker: formData.broker,
+      stockName: formData.stockName,
+      ticker: formData.ticker,
+      quantity: parseFloat(formData.quantity) || 0,
+      exchangeRate: parseFloat(formData.exchangeRate) || 0,
+      price: parseFloat(formData.price) || 0,
+      usdAmount: parseFloat(formData.usdAmount) || 0,
+      krwAmount: parseFloat(formData.krwAmount) || 0,
+    });
+
+    // 폼 초기화
+    setFormData({
+      date: format(new Date(), "yyyy-MM-dd"),
+      type: "",
+      country: "",
+      broker: "",
+      stockName: "",
+      ticker: "",
+      quantity: "",
+      exchangeRate: "",
+      price: "",
+      usdAmount: "",
+      krwAmount: "",
+    });
+
+    // 성공 메시지
+    toast({
+      title: "저장 완료",
+      description: "주식 정보가 성공적으로 저장되었습니다.",
+    });
+  };
+
   return (
-    <form className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label>거래일자</Label>
