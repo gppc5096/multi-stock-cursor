@@ -14,16 +14,32 @@ const SettingsForm = () => {
   const [ticker, setTicker] = useState("");
   const { toast } = useToast();
 
+  // 입력값을 변환하는 함수
+  const transformInput = (value: string) => {
+    // 한글, 영문, 숫자만 허용하고 영문은 대문자로 변환
+    return value
+      .replace(/[^가-힣a-zA-Z0-9\s]/g, '')
+      .toUpperCase();
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const transformedValue = transformInput(e.target.value);
+    setName(transformedValue);
+  };
+
+  const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const transformedValue = transformInput(e.target.value);
+    setTicker(transformedValue);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 여기에 데이터 저장 로직 추가 예정
     toast({
       title: "항목이 추가되었습니다.",
       description: `${type}: ${name}${ticker ? ` (${ticker})` : ''}`,
     });
     
-    // 폼 초기화
     setName("");
     setTicker("");
   };
@@ -52,7 +68,7 @@ const SettingsForm = () => {
           <Input
             id="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
             placeholder={
               type === "country" ? "예: KRW, USD" : 
               type === "broker" ? "예: 한투증권" : 
@@ -67,7 +83,7 @@ const SettingsForm = () => {
             <Input
               id="ticker"
               value={ticker}
-              onChange={(e) => setTicker(e.target.value)}
+              onChange={handleTickerChange}
               placeholder="예: 360750"
             />
           </div>
