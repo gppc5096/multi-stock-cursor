@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Import, Save } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { loadStocks } from "@/lib/stockStorage";
+import { loadStocks, saveStock } from "@/lib/stockStorage";
 import * as XLSX from 'xlsx';
 import { StockTransaction } from "@/types/stock";
 
@@ -29,7 +29,11 @@ const StockDataManagement = () => {
         krwAmount: Number(item.krwAmount) || 0,
       })) as StockTransaction[];
       
-      console.log("Processed stock data:", processedData);
+      // localStorage에 데이터 저장
+      localStorage.setItem('stocks', JSON.stringify(processedData));
+      
+      // 데이터 변경 이벤트 발생
+      window.dispatchEvent(new Event('stocksChanged'));
       
       toast({
         title: "가져오기 성공",
