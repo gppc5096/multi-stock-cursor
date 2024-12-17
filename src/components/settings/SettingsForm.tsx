@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { loadSettings, saveSettings } from "@/lib/storage";
+import { SettingItem } from "@/types/settings";
 
 type SettingType = "country" | "broker" | "stock";
 
@@ -40,6 +42,53 @@ const SettingsForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!name) {
+      toast({
+        title: "오류",
+        description: "이름을 입력해주세요.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (type === "stock" && !ticker) {
+      toast({
+        title: "오류",
+        description: "티커를 입력해주세요.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const settings = loadSettings();
+    const newItem: SettingItem = {
+      id: type === "stock" ? ticker : name,
+      type,
+      name,
+      ...(type === "stock" && { ticker })
+    };
+
+    // 중복 체크
+    const list = type === "country" ? settings.countries :
+                type === "broker" ? settings.brokers :
+                settings.stocks;
+    
+    if (list.some(item => item.id === newItem.id)) {
+      toast({
+        title: "오류",
+        description: "이미 존재하는 항목입니다.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // 새 항목 추가
+    if (type === "country") settings.countries.push(newItem);
+    else if (type === "broker") settings.brokers.push(newItem);
+    else settings.stocks.push(newItem);
+
+    saveSettings(settings);
+    
     toast({
       title: "항목이 추가되었습니다.",
       description: `${type}: ${name}${ticker ? ` (${ticker})` : ''}`,
@@ -47,6 +96,9 @@ const SettingsForm = () => {
     
     setName("");
     setTicker("");
+
+    // 테이블 새로고침을 위해 이벤트 발생
+    window.dispatchEvent(new Event('settingsChanged'));
   };
 
   return (
