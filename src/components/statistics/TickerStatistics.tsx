@@ -13,7 +13,7 @@ const TickerStatistics = () => {
     <Card className="p-4">
       <h3 className="text-lg font-semibold mb-4">티커별 통계</h3>
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-[#F1F0FB] text-[#333333]">
           <TableRow>
             <TableHead>티커</TableHead>
             <TableHead>종목명</TableHead>

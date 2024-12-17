@@ -15,7 +15,7 @@ const BrokerStatistics = () => {
     <Card className="p-4">
       <h3 className="text-lg font-semibold mb-4">증권사별 통계</h3>
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-[#F1F0FB] text-[#333333]">
           <TableRow>
             <TableHead>증권사</TableHead>
             <TableHead>티커</TableHead>
