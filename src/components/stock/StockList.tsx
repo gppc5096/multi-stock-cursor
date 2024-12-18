@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, ChartBarIcon, Briefcase } from "lucide-react";
 import StockRegistrationForm from "./StockRegistrationForm";
 import StockTable from "./StockTable";
+import USStockBriefing from "./USStockBriefing";
 
 const StockList = () => {
   return (
@@ -29,7 +30,7 @@ const StockList = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* 향후 US Stock Briefing 컨텐츠가 추가될 공간 */}
+            <USStockBriefing />
           </CardContent>
         </Card>
 
