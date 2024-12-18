@@ -1,31 +1,47 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CountryStatistics from "@/components/statistics/CountryStatistics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BrokerStatistics from "@/components/statistics/BrokerStatistics";
+import CountryStatistics from "@/components/statistics/CountryStatistics";
 import TickerStatistics from "@/components/statistics/TickerStatistics";
-import BrokerChart from "@/components/statistics/BrokerChart";
-import TickerChart from "@/components/statistics/TickerChart";
+import { PieChart, BarChart2, LineChart } from "lucide-react";
 
 const Statistics = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">리스트 통계</h2>
-          <div className="space-y-6">
-            <CountryStatistics />
-            <BrokerStatistics />
-            <TickerStatistics />
-          </div>
-        </div>
-        
-        <div>
-          <h2 className="text-2xl font-bold mb-4">차트 통계</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BrokerChart />
-            <TickerChart />
-          </div>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="h-6 w-6 text-purple-500" />
+            증권사별 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BrokerStatistics />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart2 className="h-6 w-6 text-purple-500" />
+            국가별 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CountryStatistics />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <LineChart className="h-6 w-6 text-purple-500" />
+            종목별 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TickerStatistics />
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -7,6 +7,19 @@ import { Settings, SettingItem } from "@/types/settings";
 import { useToast } from "@/components/ui/use-toast";
 import EditDialog from "./EditDialog";
 
+const getBackgroundColor = (type: string) => {
+  switch (type) {
+    case 'country':
+      return 'bg-[#FEC6A1]/10'; // 연한 빨간색
+    case 'broker':
+      return 'bg-[#F2FCE2]/30'; // 연한 초록색
+    case 'stock':
+      return 'bg-[#D3E4FD]/20'; // 연한 파란색
+    default:
+      return '';
+  }
+};
+
 const SettingsTable = () => {
   const [settings, setSettings] = useState<Settings>(loadSettings());
   const [editItem, setEditItem] = useState<SettingItem | null>(null);
@@ -67,7 +80,7 @@ const SettingsTable = () => {
           </TableHeader>
           <TableBody>
             {settings.countries.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} className={getBackgroundColor('country')}>
                 <TableCell>국가</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>-</TableCell>
@@ -85,7 +98,7 @@ const SettingsTable = () => {
             ))}
 
             {settings.brokers.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} className={getBackgroundColor('broker')}>
                 <TableCell>증권사</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>-</TableCell>
@@ -103,7 +116,7 @@ const SettingsTable = () => {
             ))}
 
             {settings.stocks.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} className={getBackgroundColor('stock')}>
                 <TableCell>종목</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.ticker}</TableCell>
