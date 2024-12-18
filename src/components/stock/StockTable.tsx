@@ -2,9 +2,20 @@ import { loadStocks } from "@/lib/stockStorage";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { formatNumber } from "@/lib/statisticsUtils";
+import { useState, useEffect } from "react";
 
 const StockTable = () => {
-  const stocks = loadStocks();
+  const [stocks, setStocks] = useState(loadStocks());
+
+  // 주식 데이터 변경 감지
+  useEffect(() => {
+    const handleStocksChange = () => {
+      setStocks(loadStocks());
+    };
+
+    window.addEventListener('stocksChanged', handleStocksChange);
+    return () => window.removeEventListener('stocksChanged', handleStocksChange);
+  }, []);
 
   return (
     <div className="overflow-x-auto">
