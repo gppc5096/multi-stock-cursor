@@ -17,3 +17,26 @@ export type DefaultStock = {
   stockName: string;
   ticker: string;
 };
+
+export type MarketIndex = {
+  name: string;
+  value: string;
+  change: string;
+  changePercent: string;
+  isUp: boolean;
+};
+
+export type ExchangeRate = {
+  value: string;
+  change: string;
+  changePercent: string;
+  isUp: boolean;
+};
+
+export type StockQuote = {
+  symbol: string;
+  price: string;
+  change: string;
+  changePercent: string;
+  isUp: boolean;
+};
