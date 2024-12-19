@@ -1,10 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
-import { ChartBarIcon, ListTodo, Settings } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ChartBarIcon, ListTodo, Settings, LogOut } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   
   const isActive = (path: string) => location.pathname === path;
+  
+  const handleLogout = () => {
+    localStorage.removeItem("app_password");
+    navigate("/login");
+  };
   
   return (
     <nav className="border-b sticky top-0 bg-background z-50">
@@ -41,6 +47,13 @@ const Navbar = () => {
               <Settings className="h-5 w-5" />
               <span>설정</span>
             </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 text-muted-foreground hover:text-primary"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>종료</span>
+            </button>
           </div>
         </div>
       </div>

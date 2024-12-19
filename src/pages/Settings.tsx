@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SettingsForm from "@/components/settings/SettingsForm";
 import SettingsTable from "@/components/settings/SettingsTable";
 import DataManagement from "@/components/settings/DataManagement";
+import PasswordManagement from "@/components/settings/PasswordManagement";
 import { Separator } from "@/components/ui/separator";
 import { Settings as SettingsIcon, ListPlus, Database } from "lucide-react";
 
@@ -43,6 +44,10 @@ const Settings = () => {
             </h3>
             <DataManagement />
           </div>
+
+          <Separator className="my-6" />
+          
+          <PasswordManagement />
         </CardContent>
       </Card>
     </div>
