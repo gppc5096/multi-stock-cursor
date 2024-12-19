@@ -2,11 +2,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BrokerStatistics from "@/components/statistics/BrokerStatistics";
 import CountryStatistics from "@/components/statistics/CountryStatistics";
 import TickerStatistics from "@/components/statistics/TickerStatistics";
+import BrokerChart from "@/components/statistics/BrokerChart";
+import TickerChart from "@/components/statistics/TickerChart";
 import { PieChart, BarChart2, LineChart } from "lucide-react";
 
 const Statistics = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <BrokerChart />
+        <TickerChart />
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
