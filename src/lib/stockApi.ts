@@ -1,40 +1,62 @@
-import { MarketIndex, ExchangeRate } from "@/types/stock";
+import { config } from './config';
+import { StockCache } from './cache';
 
-const ALPHA_VANTAGE_API_KEY = 'demo'; // Alpha Vantage의 데모 API 키 사용
+interface StockData {
+  currentPrice: number;
+  startPrice: number;
+  changeRate: number;
+}
 
-export const fetchMarketIndices = async (): Promise<MarketIndex[]> => {
-  // 데모 API 키의 제한으로 인해 임시 데이터 반환
-  return [
-    {
-      name: 'S&P 500',
-      value: '4,783.83',
-      change: '+25.32',
-      changePercent: '0.53',
-      isUp: true
-    },
-    {
-      name: 'NASDAQ',
-      value: '15,055.65',
-      change: '+80.12',
-      changePercent: '0.53',
-      isUp: true
-    },
-    {
-      name: 'Dow Jones',
-      value: '37,656.52',
-      change: '+142.78',
-      changePercent: '0.38',
-      isUp: true
+export const fetchStockData = async (ticker: string): Promise<StockData> => {
+  // 캐시 확인
+  const cacheKey = `stock_${ticker}`;
+  const cachedData = StockCache.get<StockData>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
+  try {
+    // 현재 주가 조회
+    const quoteResponse = await fetch(
+      `${config.apiBaseUrl}?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${config.apiKey}`
+    );
+    const quoteData = await quoteResponse.json();
+
+    // 년초 주가 조회
+    const yearlyResponse = await fetch(
+      `${config.apiBaseUrl}?function=TIME_SERIES_MONTHLY&symbol=${ticker}&apikey=${config.apiKey}`
+    );
+    const yearlyData = await yearlyResponse.json();
+
+    // 데이터 검증 및 처리
+    if (quoteData['Error Message'] || yearlyData['Error Message']) {
+      throw new Error('유효하지 않은 티커입니다.');
     }
-  ];
-};
 
-export const fetchExchangeRate = async (): Promise<ExchangeRate> => {
-  // 데모 API 키의 제한으로 인해 임시 데이터 반환
-  return {
-    value: '1,297.50',
-    change: '+3.50',
-    changePercent: '0.27',
-    isUp: true
-  };
+    if (!quoteData['Global Quote'] || !yearlyData['Monthly Time Series']) {
+      throw new Error('주가 정보를 찾을 수 없습니다.');
+    }
+
+    const currentPrice = parseFloat(quoteData['Global Quote']['05. price']);
+    const yearStartDate = Object.keys(yearlyData['Monthly Time Series'])
+      .find(date => date.startsWith('2024-01'));
+    const startPrice = yearStartDate 
+      ? parseFloat(yearlyData['Monthly Time Series'][yearStartDate]['4. close'])
+      : currentPrice;
+    const changeRate = ((currentPrice - startPrice) / startPrice) * 100;
+
+    const stockData: StockData = {
+      currentPrice,
+      startPrice,
+      changeRate: Number(changeRate.toFixed(2)),
+    };
+
+    // 캐시에 저장
+    StockCache.set(cacheKey, stockData);
+
+    return stockData;
+  } catch (error) {
+    console.error('API 호출 오류:', error);
+    throw error;
+  }
 };

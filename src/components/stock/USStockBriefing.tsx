@@ -14,14 +14,15 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { fetchStockData } from "@/lib/stockApi";
 
 interface StockPrice {
   id: string;
   ticker: string;
-  startPrice: number;  // 년초 주가
-  currentPrice: number;  // 현재 주가
-  changeRate: number;  // 등락률
-  searchDate: string;  // 검색 날짜
+  startPrice: number;
+  currentPrice: number;
+  changeRate: number;
+  searchDate: string;
 }
 
 const USStockBriefing = () => {
@@ -44,21 +45,21 @@ const USStockBriefing = () => {
     setStockList(data);
   };
 
-  // 임시 API 호출 함수 (실제로는 실제 API로 대체해야 함)
+  // Alpha Vantage API를 사용한 실시간 주가 조회
   const fetchStockPrice = async (ticker: string) => {
-    // 임시로 랜덤 가격 생성
-    const mockCurrentPrice = Math.floor(Math.random() * 1000) + 100;
-    const mockStartPrice = Math.floor(Math.random() * 1000) + 100;
-    const changeRate = ((mockCurrentPrice - mockStartPrice) / mockStartPrice) * 100;
-
-    return {
-      id: crypto.randomUUID(),
-      ticker: ticker.toUpperCase(),
-      startPrice: mockStartPrice,
-      currentPrice: mockCurrentPrice,
-      changeRate: Number(changeRate.toFixed(2)),
-      searchDate: new Date().toISOString(),
-    };
+    try {
+      const stockData = await fetchStockData(ticker);
+      
+      return {
+        id: crypto.randomUUID(),
+        ticker: ticker.toUpperCase(),
+        ...stockData,
+        searchDate: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('API 호출 오류:', error);
+      throw new Error(error instanceof Error ? error.message : '주가 정보를 가져오는데 실패했습니다.');
+    }
   };
 
   // 검색 핸들러
@@ -71,19 +72,30 @@ const USStockBriefing = () => {
 
       try {
         const stockData = await fetchStockPrice(searchTicker);
-        const updatedList = [stockData, ...stockList].slice(0, 5); // 최근 5개만 유지
+        
+        // 이미 존재하는 티커인지 확인
+        if (stockList.some(stock => stock.ticker === stockData.ticker)) {
+          toast({
+            title: "중복 검색",
+            description: "이미 검색된 티커입니다.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const updatedList = [stockData, ...stockList].slice(0, 5);
         saveStockData(updatedList);
         
         toast({
           title: "검색 완료",
-          description: `${searchTicker.toUpperCase()} 주가 정보가 업데이트되었습니다.`,
+          description: `${stockData.ticker} 주가 정보가 업데이트되었습니다.`,
         });
         
         setSearchTicker("");
       } catch (error) {
         toast({
           title: "검색 실패",
-          description: "주가 정보를 가져오는데 실패했습니다.",
+          description: error instanceof Error ? error.message : "주가 정보를 가져오는데 실패했습니다.",
           variant: "destructive",
         });
       }
@@ -130,7 +142,7 @@ const USStockBriefing = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">번호</TableHead>
+              <TableHead className="w-[80px]">No.</TableHead>
               <TableHead>티커</TableHead>
               <TableHead className="text-right">년초주가</TableHead>
               <TableHead className="text-right">현재주가</TableHead>
