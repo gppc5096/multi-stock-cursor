@@ -1,69 +1,77 @@
-# Welcome to your Lovable project
+# Multi Stock Management
 
-## Project info
+주식 포트폴리오 관리를 위한 웹 애플리케이션입니다.
 
-**URL**: https://lovable.dev/projects/b42ea64d-5231-4d44-824e-93e489f19c4d
+## 주요 기능
 
-## How can I edit this code?
+### 1. 주식 관리
+- 주식 매수/매도 기록 등록
+- 국내/해외 주식 통합 관리
+- 실시간 환율 정보 제공
+- 미국 주식 시장 정보 제공
 
-There are several ways of editing your application.
+### 2. 포트폴리오 통계
+- 증권사별 자산 분포
+- 국가별 자산 분포
+- 종목별 자산 분포
+- 차트 및 테이블 형태의 데이터 시각화
 
-**Use Lovable**
+### 3. 설정 관리
+- 국가, 증권사, 종목 데이터 관리
+- 데이터 백업/복원 (JSON, Excel)
+- 비밀번호 보안 설정
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b42ea64d-5231-4d44-824e-93e489f19c4d) and start prompting.
+## 기술 스택
 
-Changes made via Lovable will be committed automatically to this repo.
+- React + TypeScript
+- React Router DOM
+- TanStack Query
+- Recharts
+- Tailwind CSS
+- shadcn/ui
 
-**Use your preferred IDE**
+## 시작하기
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# 저장소 클론
+git clone https://github.com/username/multi-stock.git
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# 디렉토리 이동
+cd multi-stock
 
-Follow these steps:
+# 의존성 설치
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 개발 서버 실행
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 프로젝트 구조
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+multi-stock/
+├── src/
+│   ├── components/
+│   │   ├── layout/      # 레이아웃 컴포넌트
+│   │   ├── settings/    # 설정 관련 컴포넌트
+│   │   ├── statistics/  # 통계 관련 컴포넌트
+│   │   ├── stock/       # 주식 관련 컴포넌트
+│   │   └── ui/          # 기본 UI 컴포넌트
+│   ├── lib/             # 유틸리티 함수
+│   ├── pages/           # 페이지 컴포넌트
+│   └── types/           # TypeScript 타입 정의
+```
 
-**Use GitHub Codespaces**
+## 보안
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- 비밀번호 기반의 접근 제어
+- 모든 데이터는 로컬 스토리지에 저장
+- 민감한 데이터 암호화 처리
 
-## What technologies are used for this project?
+## 라이선스
 
-This project is built with .
+MIT License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 제작자
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b42ea64d-5231-4d44-824e-93e489f19c4d) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+나종춘
